@@ -28,7 +28,7 @@
     	<td>${skill.fee}</td>
     	<td>${skill.rating}</td>
     	<td>${skill.studentsSoFar}</td>
-    	<td><a href="enroll?skillId=${skill.id}">Enroll</a></td>
+    	<td><a href="showEnroll?skillId=${skill.id}">Enroll</a></td>
     </tr>
     </c:forEach>
 </table>
