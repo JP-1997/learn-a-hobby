@@ -2,6 +2,8 @@ package com.jp.learnahobby.controllers;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -10,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.jp.learnahobby.entities.Enrollment;
 import com.jp.learnahobby.entities.User;
 import com.jp.learnahobby.repos.EnrollmentRepository;
 import com.jp.learnahobby.repos.SkillRepository;
 import com.jp.learnahobby.repos.UserRepository;
+import com.jp.learnahobby.services.ProfileService;
 
 @Controller
 public class UserController {
@@ -27,6 +29,11 @@ public class UserController {
 
 	@Autowired
 	SkillRepository skillRepository;
+	
+	@Autowired
+	ProfileService profileService;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 	
 	private User user;
 
@@ -72,5 +79,15 @@ public class UserController {
 	public String showEditProfile(ModelMap modelMap) {
 		modelMap.addAttribute("userDetails", user);
 		return "profile/editProfile";
+	}
+	
+	@RequestMapping(value = "/updateProfile", method = RequestMethod.POST)
+	public String updateProfile(@ModelAttribute("user") User user1, ModelMap modelMap) {
+		LOGGER.info(user1.toString());
+		user = userRepository.findById(user1.getId()).get();
+		User updateUser = profileService.updateProfile(user, user1);
+		modelMap.addAttribute("userDetails", updateUser);
+
+		return "profile/showProfile";
 	}
 }

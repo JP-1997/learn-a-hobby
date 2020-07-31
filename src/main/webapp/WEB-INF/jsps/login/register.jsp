@@ -12,7 +12,7 @@
 <pre>
 First Name: <input type="text" name="firstName" />
 Last Name: <input type="text" name="lastName" />
-Date of birth: <input type="text" name="dateOfBirth" />
+Date of birth: <input type="date" name="dateOfBirth" />
 Gender:	
 	Male<input type="radio" name="gender" value="male"/>  Female <input type="radio" name="gender" value="female"/> Not Specified <input type="radio" name="gender" value="not_specified"/>
 Country: <input type="text" name="country" /> 

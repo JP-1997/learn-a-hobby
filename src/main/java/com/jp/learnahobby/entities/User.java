@@ -3,11 +3,14 @@ package com.jp.learnahobby.entities;
 import java.util.Date;
 import javax.persistence.Entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Entity
 public class User extends AbstractEntity {
 
 	private String firstName;
 	private String lastName;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dateOfBirth;
 	private String gender;
 	private String country;
@@ -77,6 +80,13 @@ public class User extends AbstractEntity {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	@Override
+	public String toString() {
+		return "User [firstName=" + firstName + ", lastName=" + lastName + ", dateOfBirth=" + dateOfBirth + ", gender="
+				+ gender + ", country=" + country + ", phoneNumber=" + phoneNumber + ", email=" + email + ", password="
+				+ password + "]";
 	}
 
 }
