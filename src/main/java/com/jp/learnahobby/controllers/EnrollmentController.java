@@ -8,12 +8,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jp.learnahobby.entities.Skill;
 import com.jp.learnahobby.repos.SkillRepository;
+import com.jp.learnahobby.services.EnrollService;
 
 @Controller
 public class EnrollmentController {
 	
 	@Autowired
 	SkillRepository skillRepository;
+	
+	@Autowired
+	EnrollService enrollService;
 
 	@RequestMapping("/showEnroll")
 	public String showEnroll(@RequestParam("skillId") Long skillId, ModelMap modelMap) {
@@ -21,4 +25,20 @@ public class EnrollmentController {
 		modelMap.addAttribute("skill", skill);
 		return "enrollment/showEnroll";
 	}
+	
+	@RequestMapping("/showCheckout")
+	public String showCheckout(@RequestParam("skillId") Long skillId, ModelMap modelMap) {
+		Skill skill = skillRepository.findById(skillId).get();
+		modelMap.addAttribute("skill", skill);
+		return "enrollment/payment";
+	}
+	
+	@RequestMapping("/enroll")
+	public String enroll(@RequestParam("skillId") Long skillId, @RequestParam("paymentGateway") String paymentGateway, ModelMap modelMap) {
+		enrollService.enroll(paymentGateway, skillId);
+		
+		return "";
+	}
+	
+	
 }
