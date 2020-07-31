@@ -43,7 +43,7 @@ li a:hover {
 <table>
   	<c:forEach items="${trendingSkills}" var="trendingSkill">
     <tr>
-    	<td><a href="showSkillDetails">${trendingSkill}</a></td>
+    	<td><a href="showSkillDetails?skillName=${trendingSkill}">${trendingSkill}</a></td>
     </tr>
     </c:forEach>
 </table>

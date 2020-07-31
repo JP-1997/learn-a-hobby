@@ -11,4 +11,6 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
 
 	@Query(value = "Select distinct s.name from skill s group by s.name order by s.students_so_far desc limit 5", nativeQuery = true)
 	List<String> fetchTrendingSkills();
+
+	List<Skill> findAllByName(String string);
 }

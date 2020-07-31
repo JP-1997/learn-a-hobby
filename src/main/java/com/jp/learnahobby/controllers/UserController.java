@@ -87,7 +87,17 @@ public class UserController {
 		user = userRepository.findById(user1.getId()).get();
 		User updateUser = profileService.updateProfile(user, user1);
 		modelMap.addAttribute("userDetails", updateUser);
-
 		return "profile/showProfile";
+	}
+	
+	@RequestMapping("/showDeleteProfile")
+	public String showDeleteProfile() {
+		return "profile/deleteProfile";
+	}
+	
+	@RequestMapping("/deleteProfile")
+	public String deleteProfile() {
+		userRepository.deleteById(user.getId());
+		return "profile/deletedSuccessfully";
 	}
 }
