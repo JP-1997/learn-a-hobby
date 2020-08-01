@@ -2,10 +2,13 @@ package com.jp.learnahobby.controllers;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jp.learnahobby.dto.Trainee;
@@ -28,6 +31,8 @@ public class EnrollmentController {
 	
 	Long userId;
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(EnrollmentController.class);
+	
 	@RequestMapping("/showEnroll")
 	public String showEnroll(@RequestParam("skillId") Long skillId, @RequestParam("userId") Long userId, ModelMap modelMap) {
 		this.userId = userId;
@@ -61,10 +66,14 @@ public class EnrollmentController {
 		return "enrollment/showTrainees";
 	}
 	
-	@RequestMapping("/setCompleted")
-	public String setCompleted() {
-		
-		return "";
+	@RequestMapping(value = "/setCompleted", method = RequestMethod.POST)
+	public String setCompleted(@RequestParam("enrollmentId") Long enrollmentId, ModelMap modelMap) {
+		LOGGER.info("enroll id" + enrollmentId.toString());
+		trainingService.markAsTrained(enrollmentId);
+		Long instructorId = enrollService.getInstructorId(enrollmentId);
+		List<Trainee> trainees = trainingService.getTrainees(instructorId);
+		modelMap.addAttribute("trainees", trainees);
+		return "enrollment/showTrainees";
 	}
 	
 }

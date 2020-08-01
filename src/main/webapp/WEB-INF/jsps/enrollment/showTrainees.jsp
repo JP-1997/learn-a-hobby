@@ -10,6 +10,7 @@
 </head>
 <body>
 <h2>My Trainees:-</h2><hr />
+
 <table>
 <tr>
 	<th>Skill ID</th>
@@ -27,9 +28,11 @@
     	<td>${trainee.traineeEmail}</td>
     	<td>${trainee.traineePhoneNumber}</td>
     	<td>${trainee.acquired}</td>
-    	<td><a href="setCompleted?enrollmentId=${trainee.enrollmentId}&userId=${trainee.traineeId}">Set as Completed</a></td>
+    	<td><form action="setCompleted" method="post"><input type="text" name="enrollmentId" value="${trainee.enrollmentId}" HIDDEN />
+    	<input type="submit" value="Set as completed" ${trainee.acquired==true ? 'disabled' : ''} /></form></td>
     </tr>
     </c:forEach>
 </table>
+
 </body>
 </html>

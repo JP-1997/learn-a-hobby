@@ -1,6 +1,7 @@
 package com.jp.learnahobby.services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,6 @@ public class TrainingServiceImpl implements TrainingService {
 			t.setEnrollmentId(e.getId());
 			t.setSkillId(e.getSkillId());
 			t.setSkillName(e.getSkillName());
-			t.setTraineeId(userId);
 			t.setTraineeName(trainee.getFirstName() + " " + trainee.getLastName());
 			t.setTraineeEmail(trainee.getEmail());
 			t.setTraineePhoneNumber(trainee.getPhoneNumber());
@@ -40,6 +40,15 @@ public class TrainingServiceImpl implements TrainingService {
 			listOfTrainees.add(t);
 		}
 		return listOfTrainees;
+	}
+
+	@Override
+	public void markAsTrained(Long enrollmentId) {
+		Enrollment enrollment = enrollmentRepository.findById(enrollmentId).get();
+		enrollment.setAcquired(true);
+		enrollment.setDateCompleted(new Date());
+		enrollmentRepository.save(enrollment);
+		
 	}
 
 }

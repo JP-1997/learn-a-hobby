@@ -7,4 +7,6 @@ import com.jp.learnahobby.dto.Trainee;
 public interface TrainingService {
 
 	public List<Trainee> getTrainees(Long instructorId);
+	
+	public void markAsTrained(Long enrollmentId);
 }

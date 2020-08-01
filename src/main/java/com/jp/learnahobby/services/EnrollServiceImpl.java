@@ -44,5 +44,10 @@ public class EnrollServiceImpl implements EnrollService {
 		}
 		return false;
 	}
+	
+	public Long getInstructorId(Long enrollmentId) {
+		Enrollment enrollment = enrollmentRepository.findById(enrollmentId).get();
+		return enrollment.getInstructorId();
+	}
 
 }
