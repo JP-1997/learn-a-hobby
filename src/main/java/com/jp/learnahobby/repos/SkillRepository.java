@@ -18,4 +18,7 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
 	@Modifying
     @Query( value = "select s.name from skill s where s.name LIKE %:term%", nativeQuery = true)
     List<String> getSkillName(String term);
+	
+	@Query(value = "Select distinct s.name from skill s where s.instructor_id = ?1", nativeQuery = true)
+	List<String> fetchMySkills(Long id);
 }

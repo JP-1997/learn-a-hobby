@@ -64,7 +64,7 @@ li a:hover {
  </c:otherwise>
 </c:choose>
 <a href="showLearn?userId=${userId}">Learn a new hobby !</a>
-<a href="showTeach">Teach a new hobby !</a>
+<a href="showTeach?userId=${userId}">Teach a new hobby !</a>
 <a href="showTrainees">My Trainees</a>
 <a href="showEnrollments">My Enrollments</a>
 </body>

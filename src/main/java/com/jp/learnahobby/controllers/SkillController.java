@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jp.learnahobby.entities.Skill;
+import com.jp.learnahobby.entities.User;
 import com.jp.learnahobby.repos.SkillRepository;
+import com.jp.learnahobby.repos.UserRepository;
 import com.jp.learnahobby.services.SkillService;
 
 @Controller
@@ -24,6 +26,9 @@ public class SkillController {
 
 	@Autowired
 	SkillService skillService;
+
+	@Autowired
+	UserRepository userRepository;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -49,5 +54,26 @@ public class SkillController {
 		List<String> skillNames = skillService.getSkillName(term);
 		return skillNames;
 	}
-	
+
+	@RequestMapping("/showTeach")
+	public String showTeach(@RequestParam("userId") Long userId, ModelMap modelMap) {
+		modelMap.addAttribute("instructorId", userId);
+		return "skill/addNewCourse";
+	}
+
+	@RequestMapping(value = "/addNewCourse", method = RequestMethod.POST)
+	public String addNewCourse(@RequestParam("name") String name, @RequestParam("description") String description,
+			@RequestParam("fee") Float fee, @RequestParam("instructorId") Long instructorId, ModelMap modelMap) {
+		User instructor = userRepository.findById(instructorId).get();
+		Skill skill = new Skill();
+		skill.setName(name);
+		skill.setDescription(description);
+		skill.setInstructorId(instructor.getId());
+		skill.setInstructorName(instructor.getFirstName() + " " + instructor.getLastName());
+		skill.setFee(fee);
+		skill.setRating(0.0f);
+		skill.setStudentsSoFar(0L);
+		skillRepository.save(skill);
+		return "skill/addCourseSuccessful";
+	}
 }
