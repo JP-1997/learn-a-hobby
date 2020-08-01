@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jp.learnahobby.dto.Trainee;
+import com.jp.learnahobby.entities.Enrollment;
 import com.jp.learnahobby.entities.Skill;
+import com.jp.learnahobby.repos.EnrollmentRepository;
 import com.jp.learnahobby.repos.SkillRepository;
 import com.jp.learnahobby.services.EnrollService;
 import com.jp.learnahobby.services.TrainingService;
@@ -28,6 +30,10 @@ public class EnrollmentController {
 	
 	@Autowired
 	TrainingService trainingService;
+	
+	@Autowired
+	EnrollmentRepository enrollmentRepository;
+
 	
 	Long userId;
 
@@ -74,6 +80,13 @@ public class EnrollmentController {
 		List<Trainee> trainees = trainingService.getTrainees(instructorId);
 		modelMap.addAttribute("trainees", trainees);
 		return "enrollment/showTrainees";
+	}
+	
+	@RequestMapping("/showEnrollments")
+	public String showEnrollments(@RequestParam("userId") Long userId, ModelMap modelMap) {
+		List<Enrollment> enrollments = enrollmentRepository.findAllByUserId(userId);
+		modelMap.addAttribute("enrollments", enrollments);
+		return "enrollment/enrollments";
 	}
 	
 }
