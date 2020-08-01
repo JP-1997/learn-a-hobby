@@ -9,15 +9,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jp.learnahobby.entities.Skill;
 import com.jp.learnahobby.repos.SkillRepository;
+import com.jp.learnahobby.services.SkillService;
 
 @Controller
 public class SkillController {
 	
 	@Autowired
 	SkillRepository skillRepository;
+	
+	@Autowired
+	SkillService skillService;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -30,4 +35,16 @@ public class SkillController {
 		modelMap.addAttribute("userId", userId);
 		return "skill/skillDetails";
 	}
+	
+	@RequestMapping("/showLearn")
+	public String showLearn() {
+		return "skill/searchHobby";
+	}
+	
+	 @RequestMapping(value = "/autocomplete")
+	    @ResponseBody
+	    public List<String> autoName(@RequestParam(value = "term", required = false, defaultValue = "")String term){
+	        List<String> skillNames = skillService.getSkillName(term);
+	        return skillNames;
+	    }
 }

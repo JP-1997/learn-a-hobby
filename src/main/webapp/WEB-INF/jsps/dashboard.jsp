@@ -63,8 +63,8 @@ li a:hover {
    <p>No skills listed.</p>
  </c:otherwise>
 </c:choose>
-<a href="showAddNewHobby">Learn a new hobby !</a>
-<a href="showTeachNewHobby">Teach a new hobby !</a>
+<a href="showLearn">Learn a new hobby !</a>
+<a href="showTeach">Teach a new hobby !</a>
 <a href="showTrainees">My Trainees</a>
 <a href="showEnrollments">My Enrollments</a>
 </body>
