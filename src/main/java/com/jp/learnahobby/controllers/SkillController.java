@@ -22,11 +22,12 @@ public class SkillController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
 	@RequestMapping("/showSkillDetails")
-	public String showSkillDetails(@RequestParam("skillName") String skillName, ModelMap modelMap) {
+	public String showSkillDetails(@RequestParam("skillName") String skillName, @RequestParam("userId") Long userId, ModelMap modelMap) {
 		List<Skill> allSkills = skillRepository.findAllByName(skillName);
 		for(Skill s : allSkills)
 		LOGGER.info(s.toString());
 		modelMap.addAttribute("allSkills", allSkills);
+		modelMap.addAttribute("userId", userId);
 		return "skill/skillDetails";
 	}
 }

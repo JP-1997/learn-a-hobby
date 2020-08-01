@@ -62,6 +62,7 @@ public class UserController {
 			modelMap.addAttribute("trendingSkills", trendingSkills);
 			List<String> mySkills = enrollmentRepository.fetchMySkills(user.getId());
 			modelMap.addAttribute("mySkills", mySkills);
+			modelMap.addAttribute("userId", user.getId());
 			return "dashboard";
 		} else {
 			modelMap.addAttribute("msg", "Invalid username or password. Please try again");
@@ -100,4 +101,15 @@ public class UserController {
 		userRepository.deleteById(user.getId());
 		return "profile/deletedSuccessfully";
 	}
+	
+	@RequestMapping("/showDashboard")
+	public String showDashboard(ModelMap modelMap) {
+		List<String> trendingSkills = skillRepository.fetchTrendingSkills();
+		modelMap.addAttribute("trendingSkills", trendingSkills);
+		List<String> mySkills = enrollmentRepository.fetchMySkills(user.getId());
+		modelMap.addAttribute("mySkills", mySkills);
+		modelMap.addAttribute("userId", user.getId());
+		return "dashboard";
+	}
+	
 }

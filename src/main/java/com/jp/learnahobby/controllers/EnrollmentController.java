@@ -18,9 +18,12 @@ public class EnrollmentController {
 	
 	@Autowired
 	EnrollService enrollService;
+	
+	Long userId;
 
 	@RequestMapping("/showEnroll")
-	public String showEnroll(@RequestParam("skillId") Long skillId, ModelMap modelMap) {
+	public String showEnroll(@RequestParam("skillId") Long skillId, @RequestParam("userId") Long userId, ModelMap modelMap) {
+		this.userId = userId;
 		Skill skill = skillRepository.findById(skillId).get();
 		modelMap.addAttribute("skill", skill);
 		return "enrollment/showEnroll";
@@ -35,9 +38,13 @@ public class EnrollmentController {
 	
 	@RequestMapping("/enroll")
 	public String enroll(@RequestParam("skillId") Long skillId, @RequestParam("paymentGateway") String paymentGateway, ModelMap modelMap) {
-		enrollService.enroll(paymentGateway, skillId);
-		
-		return "";
+		boolean isEnrolled = enrollService.enroll(paymentGateway, skillId, userId);
+		if(isEnrolled) {
+			return "enrollment/enrollmentSuccessful";
+		}
+		else {
+			return "enrollment/enrollmentUnsuccessful";			
+		}
 	}
 	
 	
