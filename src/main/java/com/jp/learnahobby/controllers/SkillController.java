@@ -64,16 +64,7 @@ public class SkillController {
 	@RequestMapping(value = "/addNewCourse", method = RequestMethod.POST)
 	public String addNewCourse(@RequestParam("name") String name, @RequestParam("description") String description,
 			@RequestParam("fee") Float fee, @RequestParam("instructorId") Long instructorId, ModelMap modelMap) {
-		User instructor = userRepository.findById(instructorId).get();
-		Skill skill = new Skill();
-		skill.setName(name);
-		skill.setDescription(description);
-		skill.setInstructorId(instructor.getId());
-		skill.setInstructorName(instructor.getFirstName() + " " + instructor.getLastName());
-		skill.setFee(fee);
-		skill.setRating(0.0f);
-		skill.setStudentsSoFar(0L);
-		skillRepository.save(skill);
+		skillService.addCourse(name, description, fee, instructorId);
 		return "skill/addCourseSuccessful";
 	}
 }

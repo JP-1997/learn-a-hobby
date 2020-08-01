@@ -8,8 +8,11 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jp.learnahobby.entities.Skill;
+import com.jp.learnahobby.entities.User;
 import com.jp.learnahobby.repos.EnrollmentRepository;
 import com.jp.learnahobby.repos.SkillRepository;
+import com.jp.learnahobby.repos.UserRepository;
 
 @Service
 public class SkillServiceImpl implements SkillService {
@@ -19,6 +22,9 @@ public class SkillServiceImpl implements SkillService {
 	
 	@Autowired
 	EnrollmentRepository enrollmentRepository;
+	
+	@Autowired
+	UserRepository userRepository;
 	
 	@Override
 	public List<String> getSkillName(String term) {
@@ -37,5 +43,21 @@ public class SkillServiceImpl implements SkillService {
 		 List<String> listOfSkills = new ArrayList<String>(skillSet);
 		return listOfSkills;
 	}
+
+	@Override
+	public Skill addCourse(String name, String description, Float fee, Long instructorId) {
+		User instructor = userRepository.findById(instructorId).get();
+		Skill skill = new Skill();
+		skill.setName(name);
+		skill.setDescription(description);
+		skill.setInstructorId(instructor.getId());
+		skill.setInstructorName(instructor.getFirstName() + " " + instructor.getLastName());
+		skill.setFee(fee);
+		skill.setRating(0.0f);
+		skill.setStudentsSoFar(0L);
+		return skillRepository.save(skill);
+	}
+	
+	
 
 }

@@ -19,7 +19,7 @@ public class ProfileServiceImpl implements ProfileService {
 		user.setDateOfBirth(newUser.getDateOfBirth());
 		user.setGender(newUser.getGender());
 		user.setCountry(newUser.getCountry());
-		user.setPhoneNumber(newUser.getPassword());
+		user.setPhoneNumber(newUser.getPhoneNumber());
 		User updatedUser = userRepository.save(user);
 		return updatedUser;
 	}
