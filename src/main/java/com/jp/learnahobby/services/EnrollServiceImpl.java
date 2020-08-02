@@ -9,8 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jp.learnahobby.entities.Enrollment;
 import com.jp.learnahobby.entities.Skill;
+import com.jp.learnahobby.entities.User;
 import com.jp.learnahobby.repos.EnrollmentRepository;
 import com.jp.learnahobby.repos.SkillRepository;
+import com.jp.learnahobby.repos.UserRepository;
 import com.jp.learnahobby.util.PaymentUtility;
 
 @Service
@@ -21,6 +23,9 @@ public class EnrollServiceImpl implements EnrollService {
 	
 	@Autowired
 	EnrollmentRepository enrollmentRepository;
+	
+	@Autowired
+	UserRepository userRepository;
 	
 	@Autowired
 	PaymentUtility paymentUtility;
@@ -52,6 +57,15 @@ public class EnrollServiceImpl implements EnrollService {
 	public Long getInstructorId(Long enrollmentId) {
 		Enrollment enrollment = enrollmentRepository.findById(enrollmentId).get();
 		return enrollment.getInstructorId();
+	}
+
+	@Override
+	public String fetchInstructorContact(Long enrollmentId) {
+		Enrollment enrollment = enrollmentRepository.findById(enrollmentId).get();
+		Long instructorId = enrollment.getInstructorId();
+		User instructor = userRepository.findById(instructorId).get();
+		String instructorEmail = instructor.getEmail();
+		return instructorEmail;
 	}
 
 

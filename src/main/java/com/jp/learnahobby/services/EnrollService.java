@@ -7,4 +7,6 @@ public interface EnrollService {
 	
 	public Long getInstructorId(Long enrollmentId);
 	
+	public String fetchInstructorContact(Long enrollmentId);
+	
 }
