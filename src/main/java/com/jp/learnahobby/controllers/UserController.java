@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,6 +18,7 @@ import com.jp.learnahobby.repos.EnrollmentRepository;
 import com.jp.learnahobby.repos.SkillRepository;
 import com.jp.learnahobby.repos.UserRepository;
 import com.jp.learnahobby.services.ProfileService;
+import com.jp.learnahobby.services.SecurityService;
 import com.jp.learnahobby.services.SkillService;
 
 @Controller
@@ -30,15 +32,21 @@ public class UserController {
 
 	@Autowired
 	SkillRepository skillRepository;
-	
+
 	@Autowired
 	ProfileService profileService;
-	
+
 	@Autowired
 	SkillService skillService;
-	
+
+	@Autowired
+	private BCryptPasswordEncoder encoder;
+
+	@Autowired
+	private SecurityService securityService;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-	
+
 	private User user;
 
 	@RequestMapping("/showReg")
@@ -46,9 +54,11 @@ public class UserController {
 		return "login/register";
 	}
 
-	@RequestMapping(value = "registerUser", method = RequestMethod.POST)
+	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
 	public String register(@ModelAttribute("user") User user) {
+		user.setPassword(encoder.encode(user.getPassword()));
 		userRepository.save(user);
+		securityService.assignRoleToUser(user);
 		return "login/login";
 	}
 
@@ -60,8 +70,11 @@ public class UserController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(@RequestParam("email") String email, @RequestParam("password") String password,
 			ModelMap modelMap) {
-		user = userRepository.findByEmail(email);
-		if (password.equals(user.getPassword())) {
+		
+		boolean loginResponse = securityService.login(email, password);
+		if (loginResponse) {
+			User user = userRepository.findByEmail(email);
+			this.user = user;
 			List<String> trendingSkills = skillRepository.fetchTrendingSkills();
 			modelMap.addAttribute("trendingSkills", trendingSkills);
 			List<String> mySkills = skillService.fetchMySkills(user.getId());
@@ -73,19 +86,19 @@ public class UserController {
 		}
 		return "login/login";
 	}
-	
+
 	@RequestMapping("/showProfile")
 	public String showInstructorProfile(ModelMap modelMap) {
 		modelMap.addAttribute("userDetails", user);
 		return "profile/showProfile";
 	}
-	
+
 	@RequestMapping("/showEditProfile")
 	public String showEditProfile(ModelMap modelMap) {
 		modelMap.addAttribute("userDetails", user);
 		return "profile/editProfile";
 	}
-	
+
 	@RequestMapping(value = "/updateProfile", method = RequestMethod.POST)
 	public String updateProfile(@ModelAttribute("user") User user1, ModelMap modelMap) {
 		LOGGER.info(user1.toString());
@@ -94,18 +107,18 @@ public class UserController {
 		modelMap.addAttribute("userDetails", updateUser);
 		return "profile/showProfile";
 	}
-	
+
 	@RequestMapping("/showDeleteProfile")
 	public String showDeleteProfile() {
 		return "profile/deleteProfile";
 	}
-	
+
 	@RequestMapping("/deleteProfile")
 	public String deleteProfile() {
 		userRepository.deleteById(user.getId());
 		return "profile/deletedSuccessfully";
 	}
-	
+
 	@RequestMapping("/showDashboard")
 	public String showDashboard(ModelMap modelMap) {
 		List<String> trendingSkills = skillRepository.fetchTrendingSkills();
@@ -115,5 +128,10 @@ public class UserController {
 		modelMap.addAttribute("userId", user.getId());
 		return "dashboard";
 	}
-	
+
+	@RequestMapping("/logout")
+	public String logout() {
+		return "login/login";
+	}
+
 }

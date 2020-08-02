@@ -36,6 +36,7 @@ li a:hover {
 <body>
 <header>
 <ul>
+	<li><a href="logout">Logout</a></li>
 	<li><a href="showProfile">My Profile</a></li>
 </ul>
 </header>
