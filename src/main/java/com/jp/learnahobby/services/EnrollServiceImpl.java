@@ -29,6 +29,8 @@ public class EnrollServiceImpl implements EnrollService {
 	@Override
 	public boolean enroll(String paymentGateway, Long skillId, Long userId) {
 		Skill skill = skillRepository.findById(skillId).get();
+		long studentsSoFar = skill.getStudentsSoFar() + 1;
+		skill.setStudentsSoFar(studentsSoFar);
 		String paymentDetails = paymentUtility.doPayment(paymentGateway, skill.getFee());
 		if(paymentDetails != null) {
 			Enrollment enrollment = new Enrollment();
@@ -41,6 +43,7 @@ public class EnrollServiceImpl implements EnrollService {
 			enrollment.setPaymentDetails(paymentDetails);
 			enrollment.setAcquired(false);
 			enrollmentRepository.save(enrollment);
+			skillRepository.save(skill);
 			return true;
 		}
 		return false;
