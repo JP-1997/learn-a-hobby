@@ -72,12 +72,7 @@ public class UserController {
 		
 		boolean loginResponse = securityService.login(email, password);
 		if (loginResponse) {
-			User user = profileService.fetchUser();
-			List<String> trendingSkills = skillRepository.fetchTrendingSkills();
-			modelMap.addAttribute("trendingSkills", trendingSkills);
-			List<String> mySkills = skillService.fetchMySkills(user.getId());
-			modelMap.addAttribute("mySkills", mySkills);
-			return "dashboard";
+			return "redirect:/showDashboard";
 		} else {
 			modelMap.addAttribute("msg", "Invalid username or password. Please try again");
 		}
