@@ -36,7 +36,7 @@ li a:hover {
 <body>
 <header>
 <ul>
-	<li><a href="logout">Logout</a></li>
+	<li><a href="logout_wya">Logout</a></li>
 	<li><a href="showProfile">My Profile</a></li>
 </ul>
 </header>
@@ -44,7 +44,7 @@ li a:hover {
 <table>
   	<c:forEach items="${trendingSkills}" var="trendingSkill">
     <tr>
-    	<td><a href="showSkillDetails?skillName=${trendingSkill}&userId=${userId}">${trendingSkill}</a></td>
+    	<td><a href="showSkillDetails?skillName=${trendingSkill}">${trendingSkill}</a></td>
     </tr>
     </c:forEach>
 </table>
@@ -64,9 +64,9 @@ li a:hover {
    <p>No skills listed.</p>
  </c:otherwise>
 </c:choose>
-<a href="showLearn?userId=${userId}">Learn a new hobby !</a>
-<a href="showTeach?userId=${userId}">Teach a new hobby !</a>
-<a href="showTrainees?userId=${userId}">My Trainees</a>
-<a href="showEnrollments?userId=${userId}">My Enrollments</a>
+<a href="showLearn">Learn a new hobby !</a>
+<a href="showTeach">Teach a new hobby !</a>
+<a href="showTrainees">My Trainees</a>
+<a href="showEnrollments">My Enrollments</a>
 </body>
 </html>

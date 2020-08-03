@@ -14,7 +14,6 @@
 Name: <input type="text" name="name" />
 Description: <input type="text" name="description" />
 Fee: <input type="number" step="any" name="fee" />
-<input type="text" name="instructorId" value="${instructorId}" hidden />
 <input type="submit" value="add course" />
 </pre>
 </form>

@@ -5,6 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,7 @@ import com.jp.learnahobby.entities.Skill;
 import com.jp.learnahobby.entities.User;
 import com.jp.learnahobby.repos.SkillRepository;
 import com.jp.learnahobby.repos.UserRepository;
+import com.jp.learnahobby.services.ProfileService;
 import com.jp.learnahobby.services.SkillService;
 
 @Controller
@@ -30,22 +33,26 @@ public class SkillController {
 	@Autowired
 	UserRepository userRepository;
 
+	@Autowired
+	ProfileService profileService;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
 	@RequestMapping("/showSkillDetails")
-	public String showSkillDetails(@RequestParam("skillName") String skillName, @RequestParam("userId") Long userId,
-			ModelMap modelMap) {
+	public String showSkillDetails(@RequestParam("skillName") String skillName, ModelMap modelMap) {
+		User user = profileService.fetchUser();
 		List<Skill> allSkills = skillRepository.findAllByName(skillName);
 		for (Skill s : allSkills)
 			LOGGER.info(s.toString());
 		modelMap.addAttribute("allSkills", allSkills);
-		modelMap.addAttribute("userId", userId);
+		modelMap.addAttribute("userId", user.getId());
 		return "skill/skillDetails";
 	}
 
 	@RequestMapping("/showLearn")
-	public String showLearn(@RequestParam("userId") Long userId, ModelMap modelMap) {
-		modelMap.addAttribute("userId", userId);
+	public String showLearn(ModelMap modelMap) {
+		User user = profileService.fetchUser();
+		modelMap.addAttribute("userId", user.getId());
 		return "skill/searchHobby";
 	}
 
@@ -57,15 +64,17 @@ public class SkillController {
 	}
 
 	@RequestMapping("/showTeach")
-	public String showTeach(@RequestParam("userId") Long userId, ModelMap modelMap) {
-		modelMap.addAttribute("instructorId", userId);
+	public String showTeach(ModelMap modelMap) {
+		User user = profileService.fetchUser();
+		modelMap.addAttribute("instructorId", user.getId());
 		return "skill/addNewCourse";
 	}
 
 	@RequestMapping(value = "/addNewCourse", method = RequestMethod.POST)
 	public String addNewCourse(@RequestParam("name") String name, @RequestParam("description") String description,
-			@RequestParam("fee") Float fee, @RequestParam("instructorId") Long instructorId, ModelMap modelMap) {
-		skillService.addCourse(name, description, fee, instructorId);
+			@RequestParam("fee") Float fee, ModelMap modelMap) {
+		User user = profileService.fetchUser();
+		skillService.addCourse(name, description, fee, user.getId());
 		return "skill/addCourseSuccessful";
 	}
 }

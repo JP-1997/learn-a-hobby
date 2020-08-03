@@ -20,7 +20,6 @@ $( function() {
 <body>
 <h2>Learn a new hobby</h2><hr />
 <form action="showSkillDetails" method="post">
-<input type="text" name="userId" value="${userId}" hidden />
 Search a hobby: <input type="text" id="hint" name="skillName" />
 <input type="submit" name="submit" value="Search" />
 </form>

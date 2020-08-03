@@ -1,6 +1,8 @@
 package com.jp.learnahobby.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.jp.learnahobby.entities.User;
@@ -24,6 +26,11 @@ public class ProfileServiceImpl implements ProfileService {
 		return updatedUser;
 	}
 	
-	
+	public User fetchUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String userEmail = auth.getName();
+		User user = userRepository.findByEmail(userEmail);
+		return user;
+	}
 
 }

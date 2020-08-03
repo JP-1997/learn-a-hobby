@@ -5,6 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,9 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jp.learnahobby.dto.Trainee;
 import com.jp.learnahobby.entities.Enrollment;
 import com.jp.learnahobby.entities.Skill;
+import com.jp.learnahobby.entities.User;
 import com.jp.learnahobby.repos.EnrollmentRepository;
 import com.jp.learnahobby.repos.SkillRepository;
+import com.jp.learnahobby.repos.UserRepository;
 import com.jp.learnahobby.services.EnrollService;
+import com.jp.learnahobby.services.ProfileService;
 import com.jp.learnahobby.services.TrainingService;
 
 @Controller
@@ -33,15 +38,18 @@ public class EnrollmentController {
 	
 	@Autowired
 	EnrollmentRepository enrollmentRepository;
-
 	
-	Long userId;
+	@Autowired
+	UserRepository userRepository;
+	
+	@Autowired
+	ProfileService profileService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EnrollmentController.class);
 	
 	@RequestMapping("/showEnroll")
-	public String showEnroll(@RequestParam("skillId") Long skillId, @RequestParam("userId") Long userId, ModelMap modelMap) {
-		this.userId = userId;
+	public String showEnroll(@RequestParam("skillId") Long skillId, ModelMap modelMap) {
+		User user = profileService.fetchUser();
 		Skill skill = skillRepository.findById(skillId).get();
 		modelMap.addAttribute("skill", skill);
 		return "enrollment/showEnroll";
@@ -56,7 +64,8 @@ public class EnrollmentController {
 	
 	@RequestMapping("/enroll")
 	public String enroll(@RequestParam("skillId") Long skillId, @RequestParam("paymentGateway") String paymentGateway, ModelMap modelMap) {
-		boolean isEnrolled = enrollService.enroll(paymentGateway, skillId, userId);
+		User user = profileService.fetchUser();
+		boolean isEnrolled = enrollService.enroll(paymentGateway, skillId, user.getId());
 		if(isEnrolled) {
 			return "enrollment/enrollmentSuccessful";
 		}
@@ -66,8 +75,9 @@ public class EnrollmentController {
 	}
 	
 	@RequestMapping("/showTrainees")
-	public String showTrainees(@RequestParam("userId") Long userId, ModelMap modelMap) {
-		List<Trainee> trainees = trainingService.getTrainees(userId);
+	public String showTrainees(ModelMap modelMap) {
+		User user = profileService.fetchUser();
+		List<Trainee> trainees = trainingService.getTrainees(user.getId());
 		modelMap.addAttribute("trainees", trainees);
 		return "enrollment/showTrainees";
 	}
@@ -83,8 +93,9 @@ public class EnrollmentController {
 	}
 	
 	@RequestMapping("/showEnrollments")
-	public String showEnrollments(@RequestParam("userId") Long userId, ModelMap modelMap) {
-		List<Enrollment> enrollments = enrollmentRepository.findAllByUserId(userId);
+	public String showEnrollments(ModelMap modelMap) {
+		User user = profileService.fetchUser();
+		List<Enrollment> enrollments = enrollmentRepository.findAllByUserId(user.getId());
 		modelMap.addAttribute("enrollments", enrollments);
 		return "enrollment/enrollments";
 	}
