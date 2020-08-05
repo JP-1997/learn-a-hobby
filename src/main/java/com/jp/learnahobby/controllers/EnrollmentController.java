@@ -58,20 +58,42 @@ public class EnrollmentController {
 	@RequestMapping("/showCheckout")
 	public String showCheckout(@RequestParam("skillId") Long skillId, ModelMap modelMap) {
 		Skill skill = skillRepository.findById(skillId).get();
+		if(skill.getFee() == 0.0) {
+			User user = profileService.fetchUser();
+			String paymentGateway = "No payment";
+			boolean isEnrolled = enrollService.enroll(paymentGateway, skillId, user.getId());
+			if(isEnrolled) {
+				return "redirect:/enrollmentSuccessful";
+			}
+			else {
+				return "redirect:/enrollmentUnsuccessful";			
+			}
+		}
 		modelMap.addAttribute("skill", skill);
 		return "enrollment/payment";
 	}
 	
-	@RequestMapping("/enroll")
+	
+	@RequestMapping(value= "/enroll", method = RequestMethod.POST)
 	public String enroll(@RequestParam("skillId") Long skillId, @RequestParam("paymentGateway") String paymentGateway, ModelMap modelMap) {
 		User user = profileService.fetchUser();
 		boolean isEnrolled = enrollService.enroll(paymentGateway, skillId, user.getId());
 		if(isEnrolled) {
-			return "enrollment/enrollmentSuccessful";
+			return "redirect:/enrollmentSuccessful";
 		}
 		else {
-			return "enrollment/enrollmentUnsuccessful";			
+			return "redirect:/enrollmentUnsuccessful";			
 		}
+	}
+	
+	@RequestMapping("/enrollmentSuccessful")
+	public String enrollmentSuccessful(){
+		return "enrollment/enrollmentSuccessful";
+	}
+	
+	@RequestMapping("/enrollmentUnsuccessful")
+	public String enrollmentUnsuccessful(){
+		return "enrollment/enrollmentUnsuccessful";
 	}
 	
 	@RequestMapping("/showTrainees")
