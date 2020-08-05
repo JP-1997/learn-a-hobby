@@ -69,7 +69,6 @@ public class UserController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(@RequestParam("email") String email, @RequestParam("password") String password,
 			ModelMap modelMap) {
-		
 		boolean loginResponse = securityService.login(email, password);
 		if (loginResponse) {
 			return "redirect:/showDashboard";
@@ -121,7 +120,6 @@ public class UserController {
 		modelMap.addAttribute("trendingSkills", trendingSkills);
 		List<String> mySkills = skillService.fetchMySkills(user.getId());
 		modelMap.addAttribute("mySkills", mySkills);
-		modelMap.addAttribute("userId", user.getId());
 		return "dashboard";
 	}
 
