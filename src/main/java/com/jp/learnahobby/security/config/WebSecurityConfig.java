@@ -20,12 +20,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/showReg", "/registerUser", "/showLogin", "/login*", "/logout").permitAll()
+		http.csrf().disable().authorizeRequests()
+				.antMatchers("/showReg", "/registerUser", "/showLogin", "/login", "/logout").permitAll()
 				.antMatchers("/showProfile", "/showEditProfile", "/updateProfile", "/showDeleteProfile",
-						"/deleteProfile", "/showDashboard", "/showSkillDetails", "/showLearn",
-						"/autocomplete", "/showTeach", "/addNewCourse", "/showEnroll", "/showCheckout", "/enroll",
-						"/showTrainees", "/setCompleted", "/showEnrollments", "/contactInstructor")
-				.hasAnyAuthority("USER").anyRequest().authenticated().and().csrf().disable();
+						"/deleteProfile", "/showDashboard", "/showSkillDetails", "/showLearn", "/autocomplete",
+						"/showTeach", "/addNewCourse", "/showEnroll", "/showCheckout", "/enroll", "/showTrainees",
+						"/setCompleted", "/showEnrollments", "/contactInstructor")
+				.hasAnyAuthority("USER").anyRequest().authenticated().and().formLogin().loginPage("/showLogin").usernameParameter("email")
+			    .passwordParameter("password").loginProcessingUrl("/performLogin").successForwardUrl("/showDashboard")
+				.permitAll().and().logout().logoutUrl("/performLogout")
+				.invalidateHttpSession(true).permitAll();
 	}
 
 	@Bean(name = BeanIds.AUTHENTICATION_MANAGER)

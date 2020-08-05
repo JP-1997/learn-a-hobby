@@ -61,7 +61,7 @@ h2 {
 </div>
 
 <h2 class="text-center">Login</h2><br />
-<form class="form-horizontal" action="login" method="post">
+<form class="form-horizontal" action="performLogin" method="post">
 <div class="form-group">
   <label class="col-md-4 control-label">E-Mail</label>  
     <div class="col-md-4 inputGroupContainer">

@@ -2,11 +2,16 @@ package com.jp.learnahobby.controllers;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -61,12 +66,12 @@ public class UserController {
 		return "redirect:/showLogin";
 	}
 
-	@RequestMapping("/showLogin")
-	public String showLoginPage() {
-		return "login/login";
-	}
+//	@RequestMapping("/doLogin")
+//	public String showLoginPage() {
+//		return "login/login";
+//	}
 
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@RequestMapping(value = "/performLogin", method = RequestMethod.POST)
 	public String login(@RequestParam("email") String email, @RequestParam("password") String password,
 			ModelMap modelMap) {
 		boolean loginResponse = securityService.login(email, password);
@@ -75,7 +80,21 @@ public class UserController {
 		} else {
 			modelMap.addAttribute("msg", "Invalid username or password. Please try again");
 		}
-		return "redirect:/showLogin";
+		return "redirect:/showLogin?error=true";
+	}
+
+	@RequestMapping(value = "/showLogin")
+	public String loginPage(@RequestParam(value = "error", required = false) String error,
+			@RequestParam(value = "logout", required = false) String logout, ModelMap model) {
+		String errorMessge = null;
+		if (error != null) {
+			errorMessge = "Username or Password is incorrect !!";
+		}
+		if (logout != null) {
+			errorMessge = "You have been successfully logged out !!";
+		}
+		model.addAttribute("msg", errorMessge);
+		return "login/login";
 	}
 
 	@RequestMapping("/showProfile")
@@ -124,10 +143,14 @@ public class UserController {
 		return "dashboard";
 	}
 
-	@RequestMapping("/logout_wya")
-	public String logout() {
-		SecurityContextHolder.getContext().setAuthentication(null);
-		return "login/login";
+	@RequestMapping("/performLogout")
+	public String logout(HttpServletRequest request, HttpServletResponse response) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null) {
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		}
+		return "redirect:/showLogin?logout=true";
+
 	}
 
 }
