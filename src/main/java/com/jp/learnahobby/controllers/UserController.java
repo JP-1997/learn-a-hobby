@@ -66,19 +66,12 @@ public class UserController {
 		return "redirect:/showLogin";
 	}
 
-//	@RequestMapping("/doLogin")
-//	public String showLoginPage() {
-//		return "login/login";
-//	}
-
 	@RequestMapping(value = "/performLogin", method = RequestMethod.POST)
 	public String login(@RequestParam("email") String email, @RequestParam("password") String password,
 			ModelMap modelMap) {
 		boolean loginResponse = securityService.login(email, password);
 		if (loginResponse) {
 			return "redirect:/showDashboard";
-		} else {
-			modelMap.addAttribute("msg", "Invalid username or password. Please try again");
 		}
 		return "redirect:/showLogin?error=true";
 	}

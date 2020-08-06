@@ -22,12 +22,31 @@
     border-radius: 0;
     font-family: Montserrat, sans-serif;
   }
-   .navbar li a, .navbar .navbar-brand {
+.navbar li a, .navbar .navbar-brand {
+    color: #fff !important;
+  }
+  .navbar-nav li a:hover, .navbar-nav li.active a {
+    color: #f4511e !important;
+    background-color: #fff !important;
+  }
+  .navbar-default .navbar-toggle {
+    border-color: transparent;
     color: #fff !important;
   }
   .profileheading{
-  padding: 60px 10px 10px 20px;
+  padding-top: 60px;
   text-align: center;
+  }
+    .neomorphism{
+  	width: 85%;
+  	margin: 0 auto;
+  	border-radius: 16px;
+	background: #ffffff;
+	box-shadow:  10px 10px 21px #8a8a8a, 
+             -10px -10px 21px #ffffff;
+    font-family: Montserrat, sans-serif;
+    padding: 30px;
+    padding-top: 50px;
   }
 </style>
 <title>Edit User Details</title>
@@ -41,7 +60,7 @@
 </nav>
 <h2 class="profileheading">Edit User Details</h2><br />
 
-
+<div class="neomorphism">
 <form class="form-horizontal" action="updateProfile" method="post">
 
 <div class="form-group">
@@ -134,5 +153,6 @@
 </div>
 
 </form>
+</div>
 </body>
 </html>
