@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false"%>
 <!DOCTYPE html>
 <html>
@@ -89,7 +90,7 @@ font-size: 20px;
     	<td>${enrollment.id}</td>
     	<td>${enrollment.skillName}</td>
     	<td>${enrollment.instructorName}</td>
-    	<td>${enrollment.dateEnrolled}</td>
+    	<td><fmt:formatDate type = "date" value = "${enrollment.dateEnrolled}" /></td>
     	<td>${enrollment.acquired}</td>
     	<td>${enrollment.paymentDetails}</td>
     	<td>
