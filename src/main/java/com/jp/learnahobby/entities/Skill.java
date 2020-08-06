@@ -12,6 +12,7 @@ public class Skill extends AbstractEntity {
 	private Float fee;
 	private Float rating;
 	private Long studentsSoFar;
+	private Long usersRated;
 
 	public String getName() {
 		return name;
@@ -73,6 +74,14 @@ public class Skill extends AbstractEntity {
 
 	public void setInstructorName(String instructorName) {
 		this.instructorName = instructorName;
+	}
+
+	public Long getUsersRated() {
+		return usersRated;
+	}
+
+	public void setUsersRated(Long usersRated) {
+		this.usersRated = usersRated;
 	}
 
 }

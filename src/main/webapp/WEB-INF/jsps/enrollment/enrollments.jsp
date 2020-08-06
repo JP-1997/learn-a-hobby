@@ -44,6 +44,11 @@
     font-family: Montserrat, sans-serif;
     padding-top: 100px;
   }
+.noEnrollments{
+text-align: center;
+font-weight: bold;
+font-size: 20px;
+}
 </style>
 <title>enrollments</title>
 </head>
@@ -67,6 +72,9 @@
   </div>
 </nav>
 <div class="enrollment-details-table">
+<c:choose>
+  <c:when test="${enrollments.size() != 0}">
+  	
 <table class="table table-hover">
 <tr>
 <th>ID</th>
@@ -84,11 +92,30 @@
     	<td>${enrollment.dateEnrolled}</td>
     	<td>${enrollment.acquired}</td>
     	<td>${enrollment.paymentDetails}</td>
-    	<td><form action="contactInstructor" method="post"><input type="text" name="enrollmentId" value="${enrollment.id}" HIDDEN />
-    	<input type="submit" value="Contact Instructor" /></form></td>
+    	<td>
+    		<c:choose>
+ 				<c:when test="${enrollment.acquired == false}">
+					<form action="contactInstructor" method="post">
+    					<input type="text" name="enrollmentId" value="${enrollment.id}" HIDDEN />
+    					<input type="submit" value="Contact Instructor" />
+    				</form>		 
+				</c:when>
+				<c:otherwise>
+					<form action="showRateCourse" method="post">
+    					<input type="text" name="enrollmentId" value="${enrollment.id}" HIDDEN />
+    					<input type="submit" value="Rate Course" ${enrollment.isRated ? 'disabled' : ''} />
+    				</form>	
+				</c:otherwise>
+			</c:choose>	
+    	</td>
     </tr>
     </c:forEach>
 </table>
+ </c:when>
+ <c:otherwise>
+   <p class="noEnrollments">You don't have any enrollments yet.</p><br /><br />
+ </c:otherwise>
+</c:choose>
 </div>
 </body>
 </html>

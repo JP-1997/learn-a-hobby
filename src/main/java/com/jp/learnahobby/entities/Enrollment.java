@@ -16,6 +16,7 @@ public class Enrollment extends AbstractEntity {
 	private Date dateCompleted;
 	private String paymentDetails;
 	private Boolean acquired;
+	private Boolean isRated;
 
 	public Long getSkillId() {
 		return skillId;
@@ -87,6 +88,14 @@ public class Enrollment extends AbstractEntity {
 
 	public void setDateCompleted(Date dateCompleted) {
 		this.dateCompleted = dateCompleted;
+	}
+
+	public Boolean getIsRated() {
+		return isRated;
+	}
+
+	public void setIsRated(Boolean isRated) {
+		this.isRated = isRated;
 	}
 
 }

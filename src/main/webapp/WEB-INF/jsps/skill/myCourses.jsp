@@ -44,6 +44,11 @@
     font-family: Montserrat, sans-serif;
     padding-top: 100px;
   }
+.noCourses{
+text-align: center;
+font-weight: bold;
+font-size: 20px;
+}
 </style>
 <title>My Courses</title>
 </head>
@@ -96,7 +101,7 @@
 </table>
  </c:when>
  <c:otherwise>
-   <p><b>No course listed.</b></p>
+   <p class="noCourses">No course listed.</p><br /><br />
  </c:otherwise>
 </c:choose>
 

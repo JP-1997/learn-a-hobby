@@ -13,4 +13,6 @@ public interface SkillService {
 	public Skill addCourse(String name, String description, Float fee, Long instructorId);
 	
 	public Skill updateCourse(Skill course);
+	
+	public void rateCourse(Long ratingStars, Long skillId, Long enrollmentId);
 }

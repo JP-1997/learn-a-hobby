@@ -86,32 +86,38 @@ public class SkillController {
 		modelMap.addAttribute("myCourses", myCourses);
 		return "skill/myCourses";
 	}
-	
+
 	@RequestMapping(value = "/editMyCourse")
 	public String editMyCourse(@RequestParam("courseId") Long skillId, ModelMap modelMap) {
 		User user = profileService.fetchUser();
 		Skill course = skillRepository.findById(skillId).get();
-		if(course.getInstructorId() == user.getId()) {
+		if (course.getInstructorId() == user.getId()) {
 			modelMap.addAttribute("course", course);
-			return "skill/editMyCourse";			
+			return "skill/editMyCourse";
 		}
 		return "redirect:/showCourses";
 	}
-	
-	
+
 	@RequestMapping(value = "/updateCourse", method = RequestMethod.POST)
 	public String updateCourse(@ModelAttribute("skill") Skill course, ModelMap modelMap) {
 		skillService.updateCourse(course);
 		return "redirect:/showCourses";
 	}
-	
+
 	@RequestMapping(value = "/deleteMyCourse")
 	public String deleteMyCourse(@RequestParam("courseId") Long skillId, ModelMap modelMap) {
 		User user = profileService.fetchUser();
 		Skill course = skillRepository.findById(skillId).get();
-		if(course.getInstructorId() == user.getId()) {
-			skillRepository.deleteById(skillId);		
+		if (course.getInstructorId() == user.getId()) {
+			skillRepository.deleteById(skillId);
 		}
 		return "redirect:/showCourses";
+	}
+
+	@RequestMapping(value = "/rateCourse", method = RequestMethod.POST)
+	public String rateCourse(@RequestParam("star") Long ratingStar, @RequestParam("skillId") Long skillId,
+			@RequestParam("enrollmentId") Long enrollmentId) {
+		skillService.rateCourse(ratingStar, skillId, enrollmentId);
+		return "redirect:/showEnrollments";
 	}
 }

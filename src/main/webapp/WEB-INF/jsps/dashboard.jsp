@@ -307,6 +307,11 @@
   height: 100%;
 }
   }
+.noSkills{
+text-align: center;
+font-weight: bold;
+font-size: 20px;
+}
   </style>
 </head>
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
@@ -363,7 +368,7 @@
  </div>
  </c:when>
  <c:otherwise>
-   <p>No skills listed.</p>
+   <p class="noSkills">No skills listed.</p>
  </c:otherwise>
 </c:choose>
 </div>

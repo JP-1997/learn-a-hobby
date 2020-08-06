@@ -60,7 +60,11 @@ h2 {
     font-family: Montserrat, sans-serif;
     padding: 30px;
     padding-top: 50px;
-  }  
+  }
+.errorMessage{
+color: red;
+text-align: center;
+}  
 
 </style>
 <title>User Login</title>
@@ -74,6 +78,7 @@ h2 {
 
 <h2 class="text-center">Login</h2><br />
 <div class="neomorphism">
+<p class="errorMessage"><b>${msg}</b></p><br />
 <form class="form-horizontal" action="performLogin" method="post">
 <div class="form-group">
   <label class="col-md-4 control-label">E-Mail</label>  
@@ -99,7 +104,7 @@ h2 {
     &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type="submit" class="btn btn-warning" >&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspLOGIN <span class="glyphicon glyphicon-send"></span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</button>
   </div>
 </div>
-${msg}
+
 </form>
 </div>
 <br />

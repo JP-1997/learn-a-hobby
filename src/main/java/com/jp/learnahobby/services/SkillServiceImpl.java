@@ -8,6 +8,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jp.learnahobby.entities.Enrollment;
 import com.jp.learnahobby.entities.Skill;
 import com.jp.learnahobby.entities.User;
 import com.jp.learnahobby.repos.EnrollmentRepository;
@@ -19,28 +20,31 @@ public class SkillServiceImpl implements SkillService {
 
 	@Autowired
 	SkillRepository skillRepository;
-	
+
 	@Autowired
 	EnrollmentRepository enrollmentRepository;
-	
+
 	@Autowired
 	UserRepository userRepository;
-	
+
+	@Autowired
+	ProfileService profileService;
+
 	@Override
 	public List<String> getSkillName(String term) {
-		 return skillRepository.getSkillName(term);
+		return skillRepository.getSkillName(term);
 	}
 
 	@Override
 	public List<String> fetchMySkills(Long userId) {
 		Set<String> skillSet = new HashSet<String>();
 		List<String> mySkillsFromEnrollmentRepo = enrollmentRepository.fetchMySkills(userId);
-		 for(String se : mySkillsFromEnrollmentRepo)
-			 skillSet.add(se);
-		 List<String> mySkillsFromSkillRepo = skillRepository.fetchMySkills(userId);
-		 for(String ss : mySkillsFromSkillRepo)
-			 skillSet.add(ss);
-		 List<String> listOfSkills = new ArrayList<String>(skillSet);
+		for (String se : mySkillsFromEnrollmentRepo)
+			skillSet.add(se);
+		List<String> mySkillsFromSkillRepo = skillRepository.fetchMySkills(userId);
+		for (String ss : mySkillsFromSkillRepo)
+			skillSet.add(ss);
+		List<String> listOfSkills = new ArrayList<String>(skillSet);
 		return listOfSkills;
 	}
 
@@ -55,6 +59,7 @@ public class SkillServiceImpl implements SkillService {
 		skill.setFee(fee);
 		skill.setRating(0.0f);
 		skill.setStudentsSoFar(0L);
+		skill.setUsersRated(0L);
 		return skillRepository.save(skill);
 	}
 
@@ -66,8 +71,19 @@ public class SkillServiceImpl implements SkillService {
 		updatedCourse.setFee(course.getFee());
 		return skillRepository.save(updatedCourse);
 	}
-	
-	
-	
+
+	@Override
+	public void rateCourse(Long ratingStars, Long skillId, Long enrollmentId) {
+		Skill skill = skillRepository.findById(skillId).get();
+		User user = profileService.fetchUser();
+		Enrollment enrollment = enrollmentRepository.findById(enrollmentId).get();
+		enrollment.setIsRated(true);
+		enrollmentRepository.save(enrollment);
+		Float rating = skill.getRating();
+		rating = ((rating * skill.getUsersRated()) + ratingStars) / (skill.getUsersRated() + 1);
+		skill.setRating(rating);
+		skill.setUsersRated(skill.getUsersRated() + 1);
+		skillRepository.save(skill);
+	}
 
 }
