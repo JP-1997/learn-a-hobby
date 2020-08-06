@@ -373,8 +373,9 @@
 <div class="utilityoptions">
     <a href="showLearn"><div class="utilityelement">Learn a new hobby !</div></a>
     <a href="showTeach"><div class="utilityelement">Teach a new hobby !</div></a>
-    <a href="showTrainees"><div class="utilityelement">My Trainees</div></a>
     <a href="showEnrollments"><div class="utilityelement">My Enrollments</div></a>
+    <a href="showTrainees"><div class="utilityelement">My Trainees</div></a>
+    <a href="showCourses"><div class="utilityelement">My Courses</div></a>
 </div>
 </body>
 </html>

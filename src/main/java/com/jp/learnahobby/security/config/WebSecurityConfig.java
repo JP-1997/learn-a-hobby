@@ -25,7 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/showProfile", "/showEditProfile", "/updateProfile", "/showDeleteProfile",
 						"/deleteProfile", "/showDashboard", "/showSkillDetails", "/showLearn", "/autocomplete",
 						"/showTeach", "/addNewCourse", "/showEnroll", "/showCheckout", "/enroll", "/showTrainees",
-						"/setCompleted", "/showEnrollments", "/contactInstructor")
+						"/setCompleted", "/showEnrollments", "/contactInstructor", "/showCourses")
 				.hasAnyAuthority("USER").anyRequest().authenticated().and().formLogin().loginPage("/showLogin").usernameParameter("email")
 			    .passwordParameter("password").loginProcessingUrl("/performLogin").successForwardUrl("/showDashboard")
 				.permitAll().and().logout().logoutUrl("/performLogout")

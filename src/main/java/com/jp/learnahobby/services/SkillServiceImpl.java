@@ -57,6 +57,16 @@ public class SkillServiceImpl implements SkillService {
 		skill.setStudentsSoFar(0L);
 		return skillRepository.save(skill);
 	}
+
+	@Override
+	public Skill updateCourse(Skill course) {
+		Skill updatedCourse = skillRepository.findById(course.getId()).get();
+		updatedCourse.setName(course.getName());
+		updatedCourse.setDescription(course.getDescription());
+		updatedCourse.setFee(course.getFee());
+		return skillRepository.save(updatedCourse);
+	}
+	
 	
 	
 

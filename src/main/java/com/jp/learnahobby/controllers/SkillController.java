@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -76,5 +77,41 @@ public class SkillController {
 		User user = profileService.fetchUser();
 		skillService.addCourse(name, description, fee, user.getId());
 		return "skill/addCourseSuccessful";
+	}
+
+	@RequestMapping("/showCourses")
+	public String showCourses(ModelMap modelMap) {
+		User user = profileService.fetchUser();
+		List<Skill> myCourses = skillRepository.findAllByInstructorId(user.getId());
+		modelMap.addAttribute("myCourses", myCourses);
+		return "skill/myCourses";
+	}
+	
+	@RequestMapping(value = "/editMyCourse")
+	public String editMyCourse(@RequestParam("courseId") Long skillId, ModelMap modelMap) {
+		User user = profileService.fetchUser();
+		Skill course = skillRepository.findById(skillId).get();
+		if(course.getInstructorId() == user.getId()) {
+			modelMap.addAttribute("course", course);
+			return "skill/editMyCourse";			
+		}
+		return "redirect:/showCourses";
+	}
+	
+	
+	@RequestMapping(value = "/updateCourse", method = RequestMethod.POST)
+	public String updateCourse(@ModelAttribute("skill") Skill course, ModelMap modelMap) {
+		skillService.updateCourse(course);
+		return "redirect:/showCourses";
+	}
+	
+	@RequestMapping(value = "/deleteMyCourse")
+	public String deleteMyCourse(@RequestParam("courseId") Long skillId, ModelMap modelMap) {
+		User user = profileService.fetchUser();
+		Skill course = skillRepository.findById(skillId).get();
+		if(course.getInstructorId() == user.getId()) {
+			skillRepository.deleteById(skillId);		
+		}
+		return "redirect:/showCourses";
 	}
 }
