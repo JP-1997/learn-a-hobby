@@ -76,6 +76,11 @@ public class SkillController {
 			@RequestParam("fee") Float fee, ModelMap modelMap) {
 		User user = profileService.fetchUser();
 		skillService.addCourse(name, description, fee, user.getId());
+		return "redirect:/addCourseSuccessful";
+	}
+	
+	@RequestMapping("/addCourseSuccessful")
+	public String addCourseSuccessfull() {
 		return "skill/addCourseSuccessful";
 	}
 
