@@ -37,7 +37,7 @@ public class SkillController {
 	@Autowired
 	ProfileService profileService;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SkillController.class);
 
 	@RequestMapping("/showSkillDetails")
 	public String showSkillDetails(@RequestParam("skillName") String skillName, ModelMap modelMap) {

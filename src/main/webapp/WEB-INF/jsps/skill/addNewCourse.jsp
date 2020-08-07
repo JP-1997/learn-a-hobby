@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js"></script>
   <style>
 .navbar {
     margin-bottom: 0;
@@ -44,8 +45,69 @@
     padding-top: 50px;
   }
 </style>
+<script>
+$(document).ready(function() {
+    $('#addCourse_form').bootstrapValidator({
+        // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            name: {
+                validators: {
+                        stringLength: {
+                        min: 2,
+                    },
+                        notEmpty: {
+                        message: 'Please enter your Name of Course'
+                    }
+                }
+            },
+            fee: {
+				validators: {
+					regexp: {
+                        regexp: /^\s*-?\d+(\.\d{1,2})?\s*$/,
+                        message: 'Please enter a valid number upto 2 decimal places'
+                    	}
+					},
+            },
+            description: {
+                validators: {
+                     stringLength: {
+                        min: 2,
+                    },
+                    notEmpty: {
+                        message: 'Please enter your course description'
+                    }
+                }
+            },
+            }
+        })
+        .on('success.form.bv', function(e) {
+            $('#success_message').slideDown({ opacity: "show" }, "slow") // Do something ...
+                $('#addCourse_form').data('bootstrapValidator').resetForm();
+
+            // Prevent form submission
+            e.preventDefault();
+
+            // Get the form instance
+            var $form = $(e.target);
+
+            // Get the BootstrapValidator instance
+            var bv = $form.data('bootstrapValidator');
+
+            // Use Ajax to submit form data
+            $.post($form.attr('action'), $form.serialize(), function(result) {
+                console.log(result);
+            }, 'json');
+        });
+});
+</script>
 <title>add new course</title>
 </head>
+
 <body>
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
@@ -67,8 +129,8 @@
 </nav>
 <div class="neomorphism">
 <h2>Add New Course</h2><hr />
-<div>Enter course details:-</div>
-<form action="addNewCourse" method="post" class="form-horizontal">
+<div>Enter course details</div>
+<form action="addNewCourse" method="post" class="form-horizontal" id="addCourse_form">
 <div class="form-group">
   <label class="col-md-4 control-label">Name</label>  
   <div class="col-md-4 inputGroupContainer">
@@ -92,7 +154,7 @@
   <div class="col-md-4 inputGroupContainer">
   <div class="input-group">
   <span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
-  <input class="form-control" type="number" step="any" name="fee" />
+  <input class="form-control" type="text" placeholder="0.00" name="fee" />
    </div>
   </div>
 </div>

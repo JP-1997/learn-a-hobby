@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js"></script>
 <meta charset="ISO-8859-1">
 <style>
 .navbar {
@@ -49,6 +50,117 @@
     padding-top: 50px;
   }
 </style>
+<script>
+$(document).ready(function() {
+    $('#editProfile_form').bootstrapValidator({
+        // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            firstName: {
+                validators: {
+                        stringLength: {
+                        min: 2,
+                    },
+                        notEmpty: {
+                        message: 'Please enter your First Name'
+                    }
+                }
+            },
+             lastName: {
+                validators: {
+                     stringLength: {
+                        min: 2,
+                    },
+                    notEmpty: {
+                        message: 'Please enter your Last Name'
+                    }
+                }
+            },
+			 date: {
+                validators: {
+                    notEmpty: {
+                        message: 'Please enter your Date of Birth'
+                    }
+                }
+            },
+            country: {
+                validators: {
+                    notEmpty: {
+                        message: 'Please enter your Country'
+                    }
+                }
+            },
+			 password: {
+                validators: {
+                     stringLength: {
+                        min: 7,
+                    },
+                    notEmpty: {
+                        message: 'Please enter your Password'
+                    }
+                }
+            },
+			confirmPassword: {
+                validators: {
+                     stringLength: {
+                        min: 7,
+                    },
+                    notEmpty: {
+                        message: 'Please confirm your Password'
+                    },
+					identical: {
+                        field: 'password',
+                        message: 'The password and its confirm are not the same'
+                    }
+                }
+            },
+            email: {
+                validators: {
+                    notEmpty: {
+                        message: 'Please enter your Email Address'
+                    },
+                    emailAddress: {
+                        message: 'Please enter a valid Email Address'
+                    }
+                }
+            },
+            phoneNumber: {
+                validators: {
+                  stringLength: {
+                        min: 10, 
+                        max: 15,
+                    notEmpty: {
+                        message: 'Please enter your Contact No.'
+                     }
+                }
+            },
+                }
+            }
+        })
+        .on('success.form.bv', function(e) {
+            $('#success_message').slideDown({ opacity: "show" }, "slow") // Do something ...
+                $('#editProfile_form').data('bootstrapValidator').resetForm();
+
+            // Prevent form submission
+            e.preventDefault();
+
+            // Get the form instance
+            var $form = $(e.target);
+
+            // Get the BootstrapValidator instance
+            var bv = $form.data('bootstrapValidator');
+
+            // Use Ajax to submit form data
+            $.post($form.attr('action'), $form.serialize(), function(result) {
+                console.log(result);
+            }, 'json');
+        });
+});
+</script>
 <title>Edit User Details</title>
 </head>
 <body>
@@ -61,7 +173,7 @@
 <h2 class="profileheading">Edit User Details</h2><br />
 
 <div class="neomorphism">
-<form class="form-horizontal" action="updateProfile" method="post">
+<form class="form-horizontal" action="updateProfile" method="post" id="editProfile_form">
 
 <div class="form-group">
   <label class="col-md-4 control-label">User ID</label>  
