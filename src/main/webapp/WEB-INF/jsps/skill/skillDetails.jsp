@@ -44,6 +44,21 @@
     font-family: Montserrat, sans-serif;
     padding-top: 100px;
   }
+.notFound{
+	 border-radius: 2px;
+	background: #ffffff;
+	box-shadow:  10px 10px 21px #8a8a8a, 
+             -10px -10px 21px #ffffff;
+    border: 1px solid #f4511e;
+    font-size: 16px !important;
+    line-height: 1.42857143 !important;
+    letter-spacing: 4px;
+    font-family: Montserrat, sans-serif;
+    width: 80%;
+    margin: 0 auto;
+    padding: 16px;
+    padding-top: 100px;
+}
   </style>
 <title>Hobby Finder</title>
 </head>
@@ -68,7 +83,12 @@
 </nav>
 
 
-<div class="trendingskill-details-table">
+<c:choose>
+    <c:when test="${empty allSkills}">
+         <p class="notFound">No such courses found.</p>
+    </c:when>
+    <c:otherwise>
+        <div class="trendingskill-details-table">
 <table class="table table-hover">
 	<tr>
     	<th>ID</th>
@@ -93,5 +113,9 @@
     </c:forEach>
 </table>
 </div>
+    </c:otherwise>
+</c:choose>
+
+
 </body>
 </html>

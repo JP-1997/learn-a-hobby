@@ -5,8 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,18 +15,13 @@ import com.jp.learnahobby.dto.Trainee;
 import com.jp.learnahobby.entities.Enrollment;
 import com.jp.learnahobby.entities.Skill;
 import com.jp.learnahobby.entities.User;
-import com.jp.learnahobby.repos.EnrollmentRepository;
-import com.jp.learnahobby.repos.SkillRepository;
-import com.jp.learnahobby.repos.UserRepository;
 import com.jp.learnahobby.services.EnrollService;
 import com.jp.learnahobby.services.ProfileService;
+import com.jp.learnahobby.services.SkillService;
 import com.jp.learnahobby.services.TrainingService;
 
 @Controller
 public class EnrollmentController {
-	
-	@Autowired
-	SkillRepository skillRepository;
 	
 	@Autowired
 	EnrollService enrollService;
@@ -37,27 +30,24 @@ public class EnrollmentController {
 	TrainingService trainingService;
 	
 	@Autowired
-	EnrollmentRepository enrollmentRepository;
-	
-	@Autowired
-	UserRepository userRepository;
-	
-	@Autowired
 	ProfileService profileService;
+	
+	@Autowired
+	SkillService skillService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EnrollmentController.class);
 	
 	@RequestMapping("/showEnroll")
 	public String showEnroll(@RequestParam("skillId") Long skillId, ModelMap modelMap) {
 		User user = profileService.fetchUser();
-		Skill skill = skillRepository.findById(skillId).get();
+		Skill skill = skillService.findSkillById(skillId);
 		modelMap.addAttribute("skill", skill);
 		return "enrollment/showEnroll";
 	}
 	
 	@RequestMapping("/showCheckout")
 	public String showCheckout(@RequestParam("skillId") Long skillId, ModelMap modelMap) {
-		Skill skill = skillRepository.findById(skillId).get();
+		Skill skill = skillService.findSkillById(skillId);
 		if(skill.getFee() == 0.0) {
 			User user = profileService.fetchUser();
 			String paymentGateway = "No payment";
@@ -117,25 +107,26 @@ public class EnrollmentController {
 	@RequestMapping("/showEnrollments")
 	public String showEnrollments(ModelMap modelMap) {
 		User user = profileService.fetchUser();
-		List<Enrollment> enrollments = enrollmentRepository.findAllByUserId(user.getId());
+		List<Enrollment> enrollments = enrollService.findAllEnrollmentsByUserId(user.getId());
 		modelMap.addAttribute("enrollments", enrollments);
 		return "enrollment/enrollments";
 	}
 	
-	@RequestMapping("/contactInstructor")
+	@RequestMapping(value = "/contactInstructor", method = RequestMethod.POST)
 	public String contactInstructor(@RequestParam("enrollmentId") Long enrollmentId, ModelMap modelMap) {
 		String instructorContact = enrollService.fetchInstructorContact(enrollmentId);
 		modelMap.addAttribute("instructorContactDetails", instructorContact);
 		return "enrollment/contactInstructor";
 	}
 	
-	@RequestMapping("/showRateCourse")
+	
+	@RequestMapping(value = "/showRateCourse", method = RequestMethod.POST)
 	public String rateCourse(@RequestParam("enrollmentId") Long enrollmentId, ModelMap modelMap) {
-		Enrollment enrollment = enrollmentRepository.findById(enrollmentId).get();
-		Skill skill = skillRepository.findById(enrollment.getSkillId()).get();
+		Enrollment enrollment = enrollService.findEnrollmentById(enrollmentId);
+		Skill skill = skillService.findSkillById(enrollment.getSkillId());
 		modelMap.addAttribute("course", skill);
 		modelMap.addAttribute("enrollmentId", enrollmentId);
 		return "enrollment/rateCourse";
 	}
-	
+
 }

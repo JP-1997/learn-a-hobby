@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js"></script>
   <style>
 .navbar {
     margin-bottom: 0;
@@ -51,6 +52,45 @@
   }
   }
 </style>
+<script>
+$(document).ready(function() {
+    $('#payment_form').bootstrapValidator({
+        // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            paymentGateway: {
+                validators: {
+                    notEmpty: {
+                        message: 'Please select payment gateway'
+                    }
+                }
+            },
+                }
+        })
+        .on('success.form.bv', function(e) {
+            $('#success_message').slideDown({ opacity: "show" }, "slow") // Do something ...
+                $('#payment_form').data('bootstrapValidator').resetForm();
+
+            // Prevent form submission
+            e.preventDefault();
+
+            // Get the form instance
+            var $form = $(e.target);
+
+            // Get the BootstrapValidator instance
+            var bv = $form.data('bootstrapValidator');
+
+            // Use Ajax to submit form data
+            $.post($form.attr('action'), $form.serialize(), function(result) {
+                console.log(result);
+            }, 'json');
+        });
+});
+</script>
 <title>Checkout</title>
 </head>
 <body>
@@ -72,7 +112,7 @@
     </div>
   </div>
 </nav>
-<form action="enroll" method="post" class="form-horizontal amounttopay">
+<form action="enroll" method="post" class="form-horizontal amounttopay" id="payment_form">
 
 
 <div class="form-group">

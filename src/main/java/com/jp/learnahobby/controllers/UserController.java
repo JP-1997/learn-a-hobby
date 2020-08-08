@@ -20,24 +20,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jp.learnahobby.entities.User;
-import com.jp.learnahobby.repos.EnrollmentRepository;
-import com.jp.learnahobby.repos.SkillRepository;
-import com.jp.learnahobby.repos.UserRepository;
 import com.jp.learnahobby.services.ProfileService;
 import com.jp.learnahobby.services.SecurityService;
 import com.jp.learnahobby.services.SkillService;
 
 @Controller
 public class UserController {
-
-	@Autowired
-	UserRepository userRepository;
-
-	@Autowired
-	EnrollmentRepository enrollmentRepository;
-
-	@Autowired
-	SkillRepository skillRepository;
 
 	@Autowired
 	ProfileService profileService;
@@ -61,7 +49,7 @@ public class UserController {
 	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
 	public String register(@ModelAttribute("user") User user) {
 		user.setPassword(encoder.encode(user.getPassword()));
-		userRepository.save(user);
+		profileService.saveUser(user);
 		securityService.assignRoleToUser(user);
 		return "redirect:/showLogin";
 	}
@@ -122,14 +110,14 @@ public class UserController {
 	public String deleteProfile() {
 		User user = profileService.fetchUser();
 		SecurityContextHolder.getContext().setAuthentication(null);
-		userRepository.deleteById(user.getId());
+		profileService.deleteUserById(user.getId());
 		return "profile/deletedSuccessfully";
 	}
 
 	@RequestMapping("/showDashboard")
 	public String showDashboard(ModelMap modelMap) {
 		User user = profileService.fetchUser();
-		List<String> trendingSkills = skillRepository.fetchTrendingSkills();
+		List<String> trendingSkills = skillService.fetchTrendingSkills();
 		modelMap.addAttribute("trendingSkills", trendingSkills);
 		List<String> mySkills = skillService.fetchMySkills(user.getId());
 		modelMap.addAttribute("mySkills", mySkills);

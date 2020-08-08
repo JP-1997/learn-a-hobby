@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page isELIgnored="false"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,6 +52,9 @@
     margin: 0 auto;
     padding: 16px;
   }
+  .notFound{
+  	padding-top: 100px;
+  }
 </style>
 <title>Contact Instructor</title>
 </head>
@@ -72,7 +77,18 @@
     </div>
   </div>
 </nav>
-<h2 class="pageheading">Instructor's contact details:-</h2><hr />
-<p class="contactdetails">${instructorContactDetails}</p>
+
+
+<c:choose>
+    <c:when test="${empty instructorContactDetails}">
+        <p class="notFound contactdetails">The instructor was not found. The instructor's account was deleted</p>
+    </c:when>
+    <c:otherwise>
+		<h2 class="pageheading">Instructor's contact details:-</h2><hr />
+		<p class="contactdetails">${instructorContactDetails}</p>        
+    </c:otherwise>
+</c:choose>
+
+
 </body>
 </html>

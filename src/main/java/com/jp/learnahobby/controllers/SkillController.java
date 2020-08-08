@@ -5,8 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,8 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jp.learnahobby.entities.Skill;
 import com.jp.learnahobby.entities.User;
-import com.jp.learnahobby.repos.SkillRepository;
-import com.jp.learnahobby.repos.UserRepository;
 import com.jp.learnahobby.services.ProfileService;
 import com.jp.learnahobby.services.SkillService;
 
@@ -26,13 +22,7 @@ import com.jp.learnahobby.services.SkillService;
 public class SkillController {
 
 	@Autowired
-	SkillRepository skillRepository;
-
-	@Autowired
 	SkillService skillService;
-
-	@Autowired
-	UserRepository userRepository;
 
 	@Autowired
 	ProfileService profileService;
@@ -42,7 +32,7 @@ public class SkillController {
 	@RequestMapping("/showSkillDetails")
 	public String showSkillDetails(@RequestParam("skillName") String skillName, ModelMap modelMap) {
 		User user = profileService.fetchUser();
-		List<Skill> allSkills = skillRepository.findAllByName(skillName);
+		List<Skill> allSkills = skillService.findAllSkillsByName(skillName);
 		for (Skill s : allSkills)
 			LOGGER.info(s.toString());
 		modelMap.addAttribute("allSkills", allSkills);
@@ -87,7 +77,7 @@ public class SkillController {
 	@RequestMapping("/showCourses")
 	public String showCourses(ModelMap modelMap) {
 		User user = profileService.fetchUser();
-		List<Skill> myCourses = skillRepository.findAllByInstructorId(user.getId());
+		List<Skill> myCourses = skillService.findAllSkillsByInstructorId(user.getId());
 		modelMap.addAttribute("myCourses", myCourses);
 		return "skill/myCourses";
 	}
@@ -95,7 +85,7 @@ public class SkillController {
 	@RequestMapping(value = "/editMyCourse")
 	public String editMyCourse(@RequestParam("courseId") Long skillId, ModelMap modelMap) {
 		User user = profileService.fetchUser();
-		Skill course = skillRepository.findById(skillId).get();
+		Skill course = skillService.findSkillById(skillId);
 		if (course.getInstructorId() == user.getId()) {
 			modelMap.addAttribute("course", course);
 			return "skill/editMyCourse";
@@ -112,9 +102,9 @@ public class SkillController {
 	@RequestMapping(value = "/deleteMyCourse")
 	public String deleteMyCourse(@RequestParam("courseId") Long skillId, ModelMap modelMap) {
 		User user = profileService.fetchUser();
-		Skill course = skillRepository.findById(skillId).get();
+		Skill course = skillService.findSkillById(skillId);
 		if (course.getInstructorId() == user.getId()) {
-			skillRepository.deleteById(skillId);
+			skillService.deleteSkillById(skillId);
 		}
 		return "redirect:/showCourses";
 	}

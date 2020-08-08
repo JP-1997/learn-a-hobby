@@ -15,4 +15,14 @@ public interface SkillService {
 	public Skill updateCourse(Skill course);
 	
 	public void rateCourse(Long ratingStars, Long skillId, Long enrollmentId);
+	
+	public List<String> fetchTrendingSkills();
+	
+	public List<Skill> findAllSkillsByName(String skillName);
+	
+	public List<Skill> findAllSkillsByInstructorId(Long instructorId);
+	
+	public Skill findSkillById(Long skillId);
+	
+	public void deleteSkillById(Long skillId);
 }

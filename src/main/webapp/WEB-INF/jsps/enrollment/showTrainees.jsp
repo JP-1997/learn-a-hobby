@@ -92,7 +92,7 @@
   </div>
 </nav>
 
-<h2 class="heading">My Trainees:-</h2>
+<h2 class="heading">My Trainees</h2>
 
 
 <c:choose>
@@ -108,7 +108,7 @@
 	<th>Trainee Name</th>
 	<th>Trainee Email</th>
 	<th>Trainee Phone Number</th>
-	<th>acquired</th>
+	<th>Acquired</th>
 </tr>
 <c:forEach items="${trainees}" var="trainee">
     <tr>
